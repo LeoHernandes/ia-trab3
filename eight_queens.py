@@ -101,8 +101,8 @@ def crossover(parent1, parent2, index):
     :return:list,list
     """
     # Cria filhos sem mexer com os pais
-    child1 = parent1[index:] + parent2[:index]
-    child2 = parent2[index:] + parent1[:index]
+    child1 = parent1[:index] + parent2[index:]
+    child2 = parent2[:index] + parent1[index:]
     #parent1[index:], parent2[index:] = parent2[index:], parent1[index:]
     #return parent1, parent2
     return child1, child2

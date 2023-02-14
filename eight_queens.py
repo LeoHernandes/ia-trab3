@@ -30,9 +30,9 @@ def log_training():
 
 def plot_generations():
     # Lista de listas de avaliações dos indivíduos de uma geração
-    max_fit = [0]
-    mean_fit = [0]
-    min_fit = [0]
+    max_fit = [None]
+    mean_fit = [None]
+    min_fit = [None]
     for p in pop_history:
         p_max, p_mean, p_min = get_pop_fitness(p)
         max_fit.append(p_max)
@@ -41,7 +41,7 @@ def plot_generations():
 
     plt.xlabel('Gerações')
     plt.ylabel('Ataques')
-    plt.plot(max_fit, 'g', label = 'Max. Ataques')
+    plt.plot(max_fit, 'g', label = 'Máx. Ataques')
     plt.plot(mean_fit, 'b', label = 'Média Ataques')
     plt.plot(min_fit, 'r', label = 'Mín. Ataques')
     plt.legend()
@@ -84,7 +84,7 @@ def tournament(participants):
     :return:list melhor individuo da lista recebida
     """
     # Avalia todos participantes e retorna o melhor
-    return min([(evaluate(i), i) for i in participants], key= lambda i : i[0])[1]
+    return min(participants, key=evaluate)
 
 def crossover(parent1, parent2, index):
     """
@@ -100,9 +100,12 @@ def crossover(parent1, parent2, index):
     :param index:int
     :return:list,list
     """
-    parent1[index:], parent2[index:] = parent2[index:], parent1[index:]
-    return parent1, parent2
-
+    # Cria filhos sem mexer com os pais
+    child1 = parent1[index:] + parent2[:index]
+    child2 = parent2[index:] + parent1[:index]
+    #parent1[index:], parent2[index:] = parent2[index:], parent1[index:]
+    #return parent1, parent2
+    return child1, child2
 
 def mutate(individual, m):
     """
@@ -139,20 +142,20 @@ def run_ga(g, n, k, m, e):
         # Embaralha-se a população de modo a mudar a ordem em que os melhores
         # indivíduos são escolhidos no sort
         random.shuffle(population)
-        sorted_pop = sorted(population, key= lambda x : evaluate(x))
+        sorted_pop = sorted(population, key=evaluate)
         elite = sorted_pop[:e]
         population = sorted_pop[e:]
 
         gen_pop = []
 
         # Gera nova população
-        for i in range(n):
+        for i in range(len(population) // 2):
             # Seleciona melhores indivíduos
-            o1 = tournament(random.choices(population, k=k))
-            o2 = tournament(random.choices(population, k=k))
-            # Crossover
-            crossover(o1, o2, random.randint(1, 8))
-            # Mutações
+            p1 = tournament(random.choices(population, k=k))
+            p2 = tournament(random.choices(population, k=k))
+            # Crossover - Obtém os filhos
+            o1, o2 = crossover(p1, p2, random.randint(1, 8))
+            # Mutações - Alterna genes dos filhos
             mutate(o1, m)
             mutate(o2, m)
             # Adiciona os novos indivíduos à nova geração
@@ -173,11 +176,11 @@ def run_ga(g, n, k, m, e):
 
 
 if __name__ == '__main__':
-    generations = 300
-    individuals = 400
-    tournament_size = 20
-    mutation = 0.8
-    elitism = 30
+    generations = 50
+    individuals = 100
+    tournament_size = 4
+    mutation = 0.05
+    elitism = 4
 
     try:
         best = run_ga(generations, individuals, tournament_size, mutation, elitism)

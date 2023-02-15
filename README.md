@@ -13,6 +13,16 @@
 
 [O QUE USAMOS?]
 
+### Bibliotecas adicionais usadas:
+- tqdm
+```
+pip install tqdm
+```
+- Matplotlib
+```
+pip install matplotlib
+```
+
 ## Valores usados 🔢
 
 [VALORES]

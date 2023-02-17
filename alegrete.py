@@ -70,7 +70,7 @@ def step_gradient(theta_0:float, theta_1:float, data: np.array, alpha:float):
     return new_theta_0, new_theta_1
     
 
-def fit(data, theta_0, theta_1, alpha, num_iterations):
+def fit(data: np.array, theta_0: float, theta_1: float, alpha: float, num_iterations: int):
     """
     Para cada época/iteração, executa uma atualização por descida de
     gradiente e registra os valores atualizados de theta_0 e theta_1.
@@ -85,7 +85,26 @@ def fit(data, theta_0, theta_1, alpha, num_iterations):
     :param num_iterations: int - numero de épocas/iterações para executar a descida de gradiente
     :return: list,list - uma lista com os theta_0 e outra com os theta_1 obtidos ao longo da execução
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    theta_0_list = []
+    theta_1_list = []
+    theta_0_list.append(theta_0)
+    theta_1_list.append(theta_1)
+    
+    for i in range(num_iterations):
+        theta_0, theta_1 = step_gradient(theta_0, theta_1, data, alpha)
+        theta_0_list.append(theta_0)
+        theta_1_list.append(theta_1)
+    
+    print(theta_1_list)
+    return theta_0_list, theta_1_list
+
+
 
 if __name__ == '__main__':
-    print(compute_mse(1, 1, np.array([[1, 3], [2, 4], [3, 4], [4, 2]])))
+    quiz_data = np.array([
+        [1, 3],
+        [2, 4],
+        [3, 4],
+        [4, 2]
+    ])
+    theta_0s, theta_1s = fit(quiz_data, theta_0=0, theta_1=0, alpha=0.1, num_iterations=100)

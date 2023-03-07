@@ -19,6 +19,7 @@ def compute_theta_0_derivative(theta_0: float, theta_1: float, data: np.array) -
     
     return (2 * sum)/len(data)
 
+
 def compute_theta_1_derivative(theta_0: float, theta_1: float, data: np.array) -> float:
     """
     Calcula a derivada parcial relativa à inclinação da reta (theta_1)
@@ -36,6 +37,7 @@ def compute_theta_1_derivative(theta_0: float, theta_1: float, data: np.array) -
         sum += (h_theta - data_point[coord_y]) * data_point[coord_x]
     
     return (2 * sum)/len(data)
+
 
 def compute_mse(theta_0: float, theta_1: float, data: np.array) -> float:
     """
@@ -56,7 +58,7 @@ def compute_mse(theta_0: float, theta_1: float, data: np.array) -> float:
     return sum/len(data)
 
 
-def step_gradient(theta_0:float, theta_1:float, data: np.array, alpha:float):
+def step_gradient(theta_0: float, theta_1: float, data: np.array, alpha: float):
     """
     Executa uma atualização por descida do gradiente  e retorna os valores atualizados de theta_0 e theta_1.
     :param theta_0: float - intercepto da reta
@@ -99,19 +101,27 @@ def fit(data: np.array, theta_0: float, theta_1: float, alpha: float, num_iterat
     return theta_0_list, theta_1_list
 
 
-def normalize_dataset(dataset: np.array):
-    dataset[:, 0] = (dataset[:, 0] - dataset[:, 0].mean())/dataset[:, 0].std()
-    dataset[:, 1] = (dataset[:, 1] - dataset[:, 1].mean())/dataset[:, 1].std()
+def standardize_data(data: np.array):
+    """
+    :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
+    :return: a matriz data normalizada
+    """
+    data[:, 0] = (data[:, 0] - data[:, 0].mean())/data[:, 0].std()
+    data[:, 1] = (data[:, 1] - data[:, 1].mean())/data[:, 1].std()
 
-    return dataset
+    return data
 
 
-def denormalize_prediction(prediction, dataset: np.array):
-    return prediction * dataset[:, 1].std() + dataset[:, 1].mean()
+def unstandardize_data(prediction: np.array, data: np.array):
+    """
+    :param prediction: np.array - a matriz de predição do modelo
+    :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
+    :return: a predição com os valores reais (não normalizados)
+    """
+    return prediction * data[:, 1].std() + data[:, 1].mean()
 
 
 if __name__ == '__main__':
-    quiz_data = normalize_dataset(np.genfromtxt('alegrete.csv', delimiter=','))
-
+    quiz_data = standardize_data(np.genfromtxt('alegrete.csv', delimiter=','))
     theta_0s, theta_1s = fit(quiz_data, theta_0=0, theta_1=0, alpha=0.01, num_iterations=150)
     print(compute_mse(theta_0s[-1], theta_1s[-1], quiz_data))

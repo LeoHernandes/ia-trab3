@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def compute_theta_0_derivative(theta_0: float, theta_1: float, data: np.array) -> float:
     """
     Calcula a derivada parcial relativa ao intercepto da reta (theta_0)
@@ -94,17 +95,19 @@ def fit(data: np.array, theta_0: float, theta_1: float, alpha: float, num_iterat
         theta_0, theta_1 = step_gradient(theta_0, theta_1, data, alpha)
         theta_0_list.append(theta_0)
         theta_1_list.append(theta_1)
-    
-    print(theta_1_list)
+
     return theta_0_list, theta_1_list
 
 
+def normalize_dataset(dataset: np.array):
+    dataset[:, 0] = (dataset[:, 0] - dataset[:, 0].mean())/dataset[:, 0].std()
+    dataset[:, 1] = (dataset[:, 1] - dataset[:, 1].mean())/dataset[:, 1].std()
+
+    return dataset
+
 
 if __name__ == '__main__':
-    quiz_data = np.array([
-        [1, 3],
-        [2, 4],
-        [3, 4],
-        [4, 2]
-    ])
-    theta_0s, theta_1s = fit(quiz_data, theta_0=0, theta_1=0, alpha=0.1, num_iterations=100)
+    quiz_data = normalize_dataset(np.genfromtxt('alegrete.csv', delimiter=','))
+
+    theta_0s, theta_1s = fit(quiz_data, theta_0=0, theta_1=0, alpha=0.01, num_iterations=150)
+    print(compute_mse(theta_0s[-1], theta_1s[-1], quiz_data))

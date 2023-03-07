@@ -17,22 +17,12 @@ def get_pop_fitness(pop):
     ind_fitness = [evaluate(i) for i in pop]
     return max(ind_fitness), mean(ind_fitness), min(ind_fitness)
 
-def log_training():
-    with open(f'logs/eight_queens/training.txt', 'a') as f:
-        b_max, b_mean, b_min = get_pop_fitness(pop_history[-1])
-        f.write(f'[{start_timestamp}]\n')
-        f.write(f'PARAMETERS:\n')
-        f.write(f'gens={generations}\nindivs={individuals}\nt_size={tournament_size}\nmut={mutation}\nelite={elitism}\n')
-        f.write(f'LAST GEN: {len(pop_history)}\n')
-        f.write(f'BEST: {get_best_of_pop(pop_history[-1])}\n')
-        f.write(f'Fitness: MAX={b_max}; MIN={b_min}; MEAN={b_mean};\n')
-        f.write('\n\n\n')    
 
 def plot_generations():
     # Lista de listas de avaliações dos indivíduos de uma geração
-    max_fit = [None]
-    mean_fit = [None]
-    min_fit = [None]
+    max_fit = []
+    mean_fit = []
+    min_fit = []
     for p in pop_history:
         p_max, p_mean, p_min = get_pop_fitness(p)
         max_fit.append(p_max)
@@ -45,7 +35,7 @@ def plot_generations():
     plt.plot(mean_fit, 'b', label = 'Média Ataques')
     plt.plot(min_fit, 'r', label = 'Mín. Ataques')
     plt.legend()
-    plt.savefig(f'logs/eight_queens/{start_timestamp}_plot.png', bbox_inches='tight')
+    plt.savefig(f'{start_timestamp}_plot.png', bbox_inches='tight')
     plt.show()
 
 
@@ -173,8 +163,6 @@ def run_ga(g, n, k, m, e):
     return get_best_of_pop(population)
 
 
-
-
 if __name__ == '__main__':
     generations = 50
     individuals = 100
@@ -188,7 +176,6 @@ if __name__ == '__main__':
         print(f'Interrompendo algoritmo na geração {len(pop_history)}')
         best = get_best_of_pop(pop_history[-1])
     finally:
-        log_training()
         plot_generations()
 
     print(f'Melhor jogada: {best} ({evaluate(best)} attacks)')

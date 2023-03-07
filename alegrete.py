@@ -106,6 +106,10 @@ def normalize_dataset(dataset: np.array):
     return dataset
 
 
+def denormalize_prediction(prediction, dataset: np.array):
+    return prediction * dataset[:, 1].std() + dataset[:, 1].mean()
+
+
 if __name__ == '__main__':
     quiz_data = normalize_dataset(np.genfromtxt('alegrete.csv', delimiter=','))
 

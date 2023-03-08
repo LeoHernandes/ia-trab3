@@ -32,7 +32,7 @@ Número de indivíduos no elitismo = 4
 O melhor indídivuo obteve um total de 0 ataques com a configuração **[5, 1, 8, 6, 3, 7, 2, 4]**.
 ## Resultados 📊
 
-![graph](ga.png)
+![graph](images/ga.png)
 
 ***
 
@@ -51,5 +51,5 @@ Número de iterações = 150
 ```
 O dataset foi normalizado usando o método de *standardization*, em que consiste em subtrair cada ocorrência das variáveis pela média de sua coluna e dividir pelo desvio padrão de sua coluna. A consequência dessa normalização é que os valores seram previstos normalizados, entretanto, uma vez que temos acesso a todo o conjunto de dados, podemos aplicar o processo inverso após prever os valores, e então obter os valores reais de preço.
 
-![graph](line.png)
+![graph](images/line.png)
 
